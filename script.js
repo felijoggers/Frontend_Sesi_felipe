@@ -12,7 +12,7 @@ function executarSistema(){
 
     // Validação para campos vazios
     if (!nome || isNaN(idade) || isNaN(valor)) {
-        alert("Por favor preencha todos os campos acima!");
+        alert("coloque seus dados, seu animal!");
         return;
     }
 
@@ -25,7 +25,27 @@ function executarSistema(){
         let valorFinal = (valor > 500 || cupom) ? valor *0.85 : valor;
 
     // Estoque
-    let esteque = ["Placa de Vídeo", "Processador", "Memória Ram"];
+    let estoque = ["Placa de Vídeo", "Processador", "Memória Ram"];
     lista.innerHTML = ""; // Limpa e lista Anterior
+
+    //forEach:percorre um arraye aolica uma ação apta cada elemento
+    estoque.forEach(item => {
+        let li = document.createElement("li");
+        li.innerText = `Item ${item} reservado.`;
+        lista.appendChild(li);//usando para adicionar um novo elemento ou texto
+    });
+
+    relatorio.style.display = "block";
+    relatorio.innerHTML = `
+    <strong> Resumo do Pedido </strong><br>
+    Cliente: ${nome} <br>
+    Total Original: R$ ${valor.toFixed(2)} <br>
+    <strong> Total com Desconto: R$ ${valorFinal.toFixed(2)} </strong>
+    `;
+    }else{
+        msg.innerText = "Venda bloqueada: Menor de 16 anos.";
+        msg.style.color = "#ff4444";
+        relatorio.style.display = "none";
+        lista.innerHTML = "";
     }
 }
