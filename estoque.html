@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estoque - TechStore SESI</title>
+<link rel="stylesheet" href="estoque.css">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>TechStore SESI</h1>
+    <p class="subtitulo">Controle de Estoque</p>
+
+    <div class="cards">
+
+        <div class="card" onclick="selecionarProduto('RTX 4060',1999)">
+            <h2>RTX 4060</h2>
+            <div class="info">Categoria: Placa de Vídeo</div>
+            <div class="info">Preço: R$ 1.999,00</div>
+            <div class="quantidade baixo">Estoque: 3 unidades</div>
+        </div>
+
+        <div class="card" onclick="selecionarProduto('Ryzen 5 5600',899)">
+            <h2>Ryzen 5 5600</h2>
+            <div class="info">Categoria: Processador</div>
+            <div class="info">Preço: R$ 899,00</div>
+            <div class="quantidade medio">Estoque: 8 unidades</div>
+        </div>
+
+        <div class="card" onclick="selecionarProduto('SSD NVMe 1TB',399)">
+            <h2>SSD NVMe 1TB</h2>
+            <div class="info">Categoria: Armazenamento</div>
+            <div class="info">Preço: R$ 399,00</div>
+            <div class="quantidade alto">Estoque: 15 unidades</div>
+        </div>
+
+        <div class="card" onclick="selecionarProduto('Memória RAM 16GB',249)">
+            <h2>Memória RAM 16GB</h2>
+            <div class="info">Categoria: Memória</div>
+            <div class="info">Preço: R$ 249,00</div>
+            <div class="quantidade alto">Estoque: 20 unidades</div>
+        </div>
+
+    </div>
+
+</div>
+<script>
+
+    let estoque = JSON.parse(localStorage.getItem("estoque")) || {
+    
+        "RTX 4060": 3,
+        "Ryzen 5 5600": 8,
+        "SSD NVMe 1TB": 15,
+        "Memória RAM 16GB": 20
+    
+    };
+    
+    function selecionarProduto(nome, preco){
+    
+        if(estoque[nome] <= 0){
+    
+            alert("Produto sem estoque!");
+            return;
+        }
+    
+        estoque[nome]--;
+    
+        localStorage.setItem(
+            "estoque",
+            JSON.stringify(estoque)
+        );
+    
+        localStorage.setItem(
+            "produtoSelecionado",
+            nome
+        );
+    
+        localStorage.setItem(
+            "precoSelecionado",
+            preco
+        );
+    
+        window.location.href = "index.html";
+    }
+    
+    </script>
+
+
+</body>
+</html>
