@@ -14,8 +14,8 @@
             <h3>Dados da Venda</h3>
             <input type="text" id="inputNome" placeholder="Nome do cliente">
             <input type="number" id="inputIdade" placeholder="Idade do cliente">
-            <input type="number" id="inputValor" placeholder="Valor Total (R$)">
             <input type="text" id="produtoSelecionado" placeholder="Produto selecionado" readonly>
+            <input type="text" id="precoSelecionado" placeholder="Preço do produto" readonly>
             <select id="inputCupom">
                 <option value="false">Não possui cupom</option>
                 <option value="true">Possui cupom (15% OFF)</option>
@@ -37,18 +37,20 @@
     </div>
     <script src="script.js"></script>
     <script>
-
         window.onload = function(){
         
             const produto = localStorage.getItem("produtoSelecionado");
+            const preco = localStorage.getItem("precoSelecionado");
         
             if(produto){
                 document.getElementById("produtoSelecionado").value = produto;
             }
         
-        }
+            if(preco){
+                document.getElementById("precoSelecionado").value = "R$ " + Number(preco).toFixed(2);
+            }
         
+        }
         </script>
-   
 </body>
 </html>

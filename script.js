@@ -2,7 +2,6 @@ function executarSistema(){
     // Dados de entrada
     const nome = document.getElementById("inputNome").value;
     const idade = parseInt(document.getElementById("inputIdade").value);
-    const valor = parseFloat(document.getElementById("inputValor").value);
     const cupom = document.getElementById("inputCupom").value === "true";
 
     // Dados de saída
@@ -11,8 +10,8 @@ function executarSistema(){
     const relatorio = document.getElementById("relatorio-final");
 
     // Validação para campos vazios
-    if (!nome || isNaN(idade) || isNaN(valor)) {
-        alert("coloque seus dados, seu animal!");
+    if (!nome || isNaN(idade)) {
+        alert("coloque seus dados!");
         return;
     }
 

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -19,48 +20,89 @@
             <h2>RTX 4060</h2>
             <div class="info">Categoria: Placa de Vídeo</div>
             <div class="info">Preço: R$ 1.999,00</div>
-            <div class="quantidade baixo">Estoque: 3 unidades</div>
+            <div class="quantidade baixo" id="RTX4060">
+                Estoque: 10 unidades
+                
+            </div>
+            <button onclick="adicionarEstoque(event,'RTX 4060')">
+                + Estoque
+            </button>
         </div>
 
         <div class="card" onclick="selecionarProduto('Ryzen 5 5600',899)">
             <h2>Ryzen 5 5600</h2>
             <div class="info">Categoria: Processador</div>
             <div class="info">Preço: R$ 899,00</div>
-            <div class="quantidade medio">Estoque: 8 unidades</div>
+        
+            <div class="quantidade baixo" id="Ryzen5600">
+                Estoque: 10 unidades
+            </div>
+        
+            <button onclick="adicionarEstoque(event,'Ryzen 5 5600')">
+                + Estoque 
+            </button>
         </div>
 
         <div class="card" onclick="selecionarProduto('SSD NVMe 1TB',399)">
             <h2>SSD NVMe 1TB</h2>
             <div class="info">Categoria: Armazenamento</div>
             <div class="info">Preço: R$ 399,00</div>
-            <div class="quantidade alto">Estoque: 15 unidades</div>
+        
+            <div class="quantidade baixo" id="SSD1TB">
+                Estoque: 10 unidades
+            </div>
+        
+            <button onclick="adicionarEstoque(event,'SSD NVMe 1TB')">
+                + Estoque 
+            </button>
         </div>
 
         <div class="card" onclick="selecionarProduto('Memória RAM 16GB',249)">
             <h2>Memória RAM 16GB</h2>
             <div class="info">Categoria: Memória</div>
             <div class="info">Preço: R$ 249,00</div>
-            <div class="quantidade alto">Estoque: 20 unidades</div>
+        
+            <div class="quantidade baixo" id="RAM16GB">
+                Estoque: 10 unidades
+            </div>
+        
+            <button onclick="adicionarEstoque(event,'Memória RAM 16GB')">
+                + Estoque 
+            </button>
         </div>
-
+        <a href="index.html">
+            <button type="button">Voltar para os pedidos</button>
+        </a>
     </div>
 
 </div>
 <script>
-
     let estoque = JSON.parse(localStorage.getItem("estoque")) || {
-    
-        "RTX 4060": 3,
-        "Ryzen 5 5600": 8,
-        "SSD NVMe 1TB": 15,
-        "Memória RAM 16GB": 20
-    
+        "RTX 4060": 10,
+        "Ryzen 5 5600": 10,
+        "SSD NVMe 1TB": 10,
+        "Memória RAM 16GB": 10
+        
     };
+        window.onload = function(){
+
+    document.getElementById("RTX4060").innerText =
+    "Estoque: " + estoque["RTX 4060"] + " unidades";
+
+    document.getElementById("Ryzen5600").innerText =
+    "Estoque: " + estoque["Ryzen 5 5600"] + " unidades";
+
+    document.getElementById("SSD1TB").innerText =
+    "Estoque: " + estoque["SSD NVMe 1TB"] + " unidades";
+
+    document.getElementById("RAM16GB").innerText =
+    "Estoque: " + estoque["Memória RAM 16GB"] + " unidades";
+    }
     
-    function selecionarProduto(nome, preco){
     
-        if(estoque[nome] <= 0){
+    function selecionarProduto(nome, valor){
     
+        if (estoque[nome] <= 0){
             alert("Produto sem estoque!");
             return;
         }
@@ -72,21 +114,39 @@
             JSON.stringify(estoque)
         );
     
+        // Salva o nome do produto
         localStorage.setItem(
             "produtoSelecionado",
             nome
         );
     
+        // Salva o preço do produto
         localStorage.setItem(
             "precoSelecionado",
-            preco
+            valor
         );
     
+        // Vai para a página principal
         window.location.href = "index.html";
     }
-    
+    function adicionarEstoque(event,nome){
+
+event.stopPropagation();
+
+estoque[nome]++;
+
+localStorage.setItem(
+    "estoque",
+    JSON.stringify(estoque)
+);
+
+location.reload();
+}
     </script>
 
 
 </body>
 </html>
+
+
+
