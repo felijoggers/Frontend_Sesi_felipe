@@ -48,3 +48,4 @@ function executarSistema(){
         lista.innerHTML = "";
     }
 }
+

@@ -70,10 +70,14 @@
                 + Estoque 
             </button>
         </div>
-        <a href="index.html">
-            <button type="button">Voltar para os pedidos</button>
-        </a>
+    
     </div>
+    <button id="adicionarProduto">
+        + Novo Produto
+    </button>
+    <a href="index.html">
+        <button type="button">Voltar para os pedidos</button>
+    </a>
 
 </div>
 <script>
@@ -143,7 +147,61 @@ localStorage.setItem(
 location.reload();
 }
     </script>
+    <script>
+    const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
 
+    function renderizarProdutos() {
+
+const container = document.querySelector(".cards");
+
+produtos.forEach(produto => {
+
+    const card = document.createElement("div");
+    card.classList.add("card");
+
+    card.innerHTML = `
+        <h2>${produto.nome}</h2>
+        <div class="info">Categoria: ${produto.categoria}</div>
+        <div class="info">Preço: R$ ${produto.preco}</div>
+        <div class="quantidade baixo">
+            Estoque: ${produto.estoque} unidades
+        </div>
+        <button>+ Estoque</button>
+    `;
+
+    container.appendChild(card);
+});
+}
+    document.getElementById("adicionarProduto").addEventListener("click", () => {
+    
+        const card = document.createElement("div");
+card.classList.add("card");
+
+card.onclick = function() {
+    selecionarProduto(produto.nome, Number(produto.preco));
+};
+    
+        const categoria = prompt("Categoria:");
+        const preco = prompt("Preço:");
+        const qtd = prompt("Quantidade em estoque:");
+    
+        produtos.push({
+            nome,
+            categoria,
+            preco,
+            estoque: qtd
+        });
+    
+        localStorage.setItem(
+            "produtos",
+            JSON.stringify(produtos)
+        );
+    
+        location.reload();
+    });
+    
+    renderizarProdutos()
+</script>
 
 </body>
 </html>
