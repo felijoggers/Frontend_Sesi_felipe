@@ -4,6 +4,10 @@ function executarSistema(){
     const idade = parseInt(document.getElementById("inputIdade").value);
     const cupom = document.getElementById("inputCupom").value === "true";
 
+    const valor = Number(
+        localStorage.getItem("precoSelecionado")
+    );
+
     // Dados de saída
     const msg = document.getElementById("mensagem-autorizacao");
     const lista = document.getElementById("lista-estoque");

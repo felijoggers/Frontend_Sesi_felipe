@@ -15,94 +15,23 @@
     <p class="subtitulo">Controle de Estoque</p>
 
     <div class="cards">
-
-        <div class="card" onclick="selecionarProduto('RTX 4060',1999)">
-            <h2>RTX 4060</h2>
-            <div class="info">Categoria: Placa de Vídeo</div>
-            <div class="info">Preço: R$ 1.999,00</div>
-            <div class="quantidade baixo" id="RTX4060">
-                Estoque: 10 unidades
-                
-            </div>
-            <button onclick="adicionarEstoque(event,'RTX 4060')">
-                + Estoque
-            </button>
-        </div>
-
-        <div class="card" onclick="selecionarProduto('Ryzen 5 5600',899)">
-            <h2>Ryzen 5 5600</h2>
-            <div class="info">Categoria: Processador</div>
-            <div class="info">Preço: R$ 899,00</div>
-        
-            <div class="quantidade baixo" id="Ryzen5600">
-                Estoque: 10 unidades
-            </div>
-        
-            <button onclick="adicionarEstoque(event,'Ryzen 5 5600')">
-                + Estoque 
-            </button>
-        </div>
-
-        <div class="card" onclick="selecionarProduto('SSD NVMe 1TB',399)">
-            <h2>SSD NVMe 1TB</h2>
-            <div class="info">Categoria: Armazenamento</div>
-            <div class="info">Preço: R$ 399,00</div>
-        
-            <div class="quantidade baixo" id="SSD1TB">
-                Estoque: 10 unidades
-            </div>
-        
-            <button onclick="adicionarEstoque(event,'SSD NVMe 1TB')">
-                + Estoque 
-            </button>
-        </div>
-
-        <div class="card" onclick="selecionarProduto('Memória RAM 16GB',249)">
-            <h2>Memória RAM 16GB</h2>
-            <div class="info">Categoria: Memória</div>
-            <div class="info">Preço: R$ 249,00</div>
-        
-            <div class="quantidade baixo" id="RAM16GB">
-                Estoque: 10 unidades
-            </div>
-        
-            <button onclick="adicionarEstoque(event,'Memória RAM 16GB')">
-                + Estoque 
-            </button>
-        </div>
-    
     </div>
+    
     <button id="adicionarProduto">
         + Novo Produto
     </button>
+    
     <a href="index.html">
         <button type="button">Voltar para os pedidos</button>
     </a>
 
+    <button id="excluirProdutoBtn">
+        Excluir Produto
+    </button>
 </div>
 <script>
-    let estoque = JSON.parse(localStorage.getItem("estoque")) || {
-        "RTX 4060": 10,
-        "Ryzen 5 5600": 10,
-        "SSD NVMe 1TB": 10,
-        "Memória RAM 16GB": 10
-        
-    };
-        window.onload = function(){
 
-    document.getElementById("RTX4060").innerText =
-    "Estoque: " + estoque["RTX 4060"] + " unidades";
-
-    document.getElementById("Ryzen5600").innerText =
-    "Estoque: " + estoque["Ryzen 5 5600"] + " unidades";
-
-    document.getElementById("SSD1TB").innerText =
-    "Estoque: " + estoque["SSD NVMe 1TB"] + " unidades";
-
-    document.getElementById("RAM16GB").innerText =
-    "Estoque: " + estoque["Memória RAM 16GB"] + " unidades";
-    }
-    
+    let estoque = JSON.parse(localStorage.getItem("estoque")) || {};
     
     function selecionarProduto(nome, valor){
     
@@ -133,16 +62,36 @@
         // Vai para a página principal
         window.location.href = "index.html";
     }
-    function adicionarEstoque(event,nome){
+    function adicionarEstoque(event, nome) {
 
 event.stopPropagation();
 
-estoque[nome]++;
+if (estoque[nome] !== undefined) {
 
-localStorage.setItem(
-    "estoque",
-    JSON.stringify(estoque)
-);
+    estoque[nome]++;
+
+    localStorage.setItem(
+        "estoque",
+        JSON.stringify(estoque)
+    );
+
+} else {
+
+    let produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+
+    const produto = produtos.find(
+        p => p.nome === nome
+    );
+
+    if (produto) {
+        produto.estoque = Number(produto.estoque) + 1;
+    }
+
+    localStorage.setItem(
+        "produtos",
+        JSON.stringify(produtos)
+    );
+}
 
 location.reload();
 }
@@ -157,16 +106,48 @@ const container = document.querySelector(".cards");
 produtos.forEach(produto => {
 
     const card = document.createElement("div");
-    card.classList.add("card");
+card.classList.add("card");
+
+card.onclick = function() {
+
+    if (produto.estoque <= 0) {
+        alert("Produto sem estoque!");
+        return;
+    }
+
+    produto.estoque--;
+
+    console.log(produtos);
+
+    localStorage.setItem(
+        "produtos",
+        JSON.stringify(produtos)
+    );
+
+    localStorage.setItem(
+        "produtoSelecionado",
+        produto.nome
+    );
+
+    localStorage.setItem(
+        "precoSelecionado",
+        produto.preco
+    );
+
+    window.location.href = "index.html";
+};
 
     card.innerHTML = `
         <h2>${produto.nome}</h2>
+        <div class="info">Nome: ${produto.nome}</div>
         <div class="info">Categoria: ${produto.categoria}</div>
         <div class="info">Preço: R$ ${produto.preco}</div>
         <div class="quantidade baixo">
             Estoque: ${produto.estoque} unidades
         </div>
-        <button>+ Estoque</button>
+       <button onclick="event.stopPropagation(); adicionarEstoque(event,'${produto.nome}')">
+        + Estoque
+        </button>
     `;
 
     container.appendChild(card);
@@ -181,16 +162,21 @@ card.onclick = function() {
     selecionarProduto(produto.nome, Number(produto.preco));
 };
     
+        const nome = prompt("Nome:");
         const categoria = prompt("Categoria:");
         const preco = prompt("Preço:");
         const qtd = prompt("Quantidade em estoque:");
+
+        if(!nome || !categoria || !preco || !qtd){
+    return;
+}
     
         produtos.push({
-            nome,
-            categoria,
-            preco,
-            estoque: qtd
-        });
+    nome,
+    categoria,
+    preco: Number(preco),
+    estoque: Number(qtd)
+    });
     
         localStorage.setItem(
             "produtos",
@@ -201,7 +187,64 @@ card.onclick = function() {
     });
     
     renderizarProdutos()
+
+    document.getElementById("excluirProdutoBtn")
+.addEventListener("click", () => {
+
+    let produtos =
+        JSON.parse(localStorage.getItem("produtos")) || [];
+
+    if(produtos.length === 0){
+        alert("Não há produtos cadastrados!");
+        return;
+    }
+
+    let nomes = produtos.map(
+    (p, i) => `${i + 1} - ${p.nome}`
+).join("\n");
+
+    let nome = prompt(
+        "Digite o nome do produto que deseja excluir:\n\n" +
+        nomes
+    );
+
+    if(!nome){
+        return;
+    }
+
+    const indice = Number(nome) - 1;
+
+if(indice < 0 || indice >= produtos.length){
+    alert("Produto inválido!");
+    return;
+}
+
+const produto = produtos[indice];
+
+    if(!produto){
+        alert("Produto não encontrado!");
+        return;
+    }
+
+    const confirmar = confirm(
+        `Tem certeza que deseja excluir "${produto.nome}"?`
+    );
+
+    if(!confirmar){
+        return;
+    }
+
+    produtos.splice(indice, 1);
+
+    localStorage.setItem(
+        "produtos",
+        JSON.stringify(produtos)
+    );
+
+    location.reload();
+});
 </script>
+
 
 </body>
 </html>
