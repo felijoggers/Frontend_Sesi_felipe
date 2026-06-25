@@ -12,8 +12,15 @@
 <div class="container">
 
     <h1>TechStore SESI</h1>
-    <p class="subtitulo">Controle de Estoque</p>
-
+    <div class="topo">
+        <p class="subtitulo">Controle de Estoque</p>
+    
+        <input
+            type="text"
+            id="pesquisa"
+            placeholder="Pesquisar produto..."
+        >
+    </div>
     <div class="cards">
     </div>
     
@@ -29,6 +36,7 @@
         Excluir Produto
     </button>
 </div>
+
 <script>
 
     let estoque = JSON.parse(localStorage.getItem("estoque")) || {};
@@ -141,26 +149,50 @@ card.onclick = function() {
         <h2>${produto.nome}</h2>
         <div class="info">Nome: ${produto.nome}</div>
         <div class="info">Categoria: ${produto.categoria}</div>
-        <div class="info">Preço: R$ ${produto.preco}</div>
-        <div class="quantidade baixo">
-            Estoque: ${produto.estoque} unidades
+        <div class="info">
+        Preço: R$ ${Number(produto.preco).toLocaleString('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+        })}
+        </div>
+        <div class="quantidade ${
+        produto.estoque <= 5 ? "baixo" : "normal"
+        }">
+        Estoque: ${produto.estoque} unidades
         </div>
        <button onclick="event.stopPropagation(); adicionarEstoque(event,'${produto.nome}')">
         + Estoque
+        </button>
+        <button onclick="event.stopPropagation(); removerEstoque('${produto.nome}')">
+        - Estoque
         </button>
     `;
 
     container.appendChild(card);
 });
 }
+function removerEstoque(nome){
+
+let produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+
+const produto = produtos.find(
+    p => p.nome === nome
+);
+
+if(produto && produto.estoque > 0){
+    produto.estoque--;
+}
+
+localStorage.setItem(
+    "produtos",
+    JSON.stringify(produtos)
+);
+
+location.reload();
+}
     document.getElementById("adicionarProduto").addEventListener("click", () => {
     
-        const card = document.createElement("div");
-card.classList.add("card");
-
-card.onclick = function() {
-    selecionarProduto(produto.nome, Number(produto.preco));
-};
+       
     
         const nome = prompt("Nome:");
         const categoria = prompt("Categoria:");
@@ -170,13 +202,14 @@ card.onclick = function() {
         if(!nome || !categoria || !preco || !qtd){
     return;
 }
-    
-        produtos.push({
+        console.log("Preço digitado:", preco);
+    produtos.push({
     nome,
     categoria,
-    preco: Number(preco),
+    preco: Number(preco.replace(",", ".")),
     estoque: Number(qtd)
     });
+    console.log(produtos);
     
         localStorage.setItem(
             "produtos",
@@ -203,10 +236,10 @@ card.onclick = function() {
     (p, i) => `${i + 1} - ${p.nome}`
 ).join("\n");
 
-    let nome = prompt(
-        "Digite o nome do produto que deseja excluir:\n\n" +
-        nomes
-    );
+let nome = prompt(
+    "Digite o NÚMERO do produto que deseja excluir:\n\n" +
+    nomes
+);
 
     if(!nome){
         return;
@@ -242,6 +275,25 @@ const produto = produtos[indice];
     );
 
     location.reload();
+});
+</script>
+<script>
+    document.getElementById("pesquisa")
+.addEventListener("input", function(){
+
+    const texto = this.value.toLowerCase();
+
+    document.querySelectorAll(".card")
+    .forEach(card => {
+
+        const nome = card.querySelector("h2")
+        .innerText.toLowerCase();
+
+        card.style.display =
+            nome.includes(texto)
+            ? "block"
+            : "none";
+    });
 });
 </script>
 

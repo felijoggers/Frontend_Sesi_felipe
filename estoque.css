@@ -115,3 +115,31 @@ a{
 a button{
     width: 1000px;
 }
+.baixo{
+    color:red;
+    font-weight:bold;
+}
+
+.normal{
+    color:green;
+}
+.topo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.subtitulo{
+    margin: 0;
+}
+
+#pesquisa{
+    width: 250px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #00ff88;
+    background: #111;
+    color: white;
+}
