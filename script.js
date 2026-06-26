@@ -19,24 +19,26 @@ function executarSistema(){
         return;
     }
 
-    // Regra de negócio
-    if(idade >=16){
-        msg.innerText = `Venda Autorizada: ${nome}`;
-        msg.style.color = "#00ff88";
+    if (idade >= 16) {
 
+        let produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+    
+        const nomeProduto = localStorage.getItem("produtoSelecionado");
+    
+        const produto = produtos.find(p => p.nome === nomeProduto);
+    
+        if (produto && produto.estoque > 0) {
+            produto.estoque--;
+        }
+    
+        localStorage.setItem("produtos", JSON.stringify(produtos));
+    
+    
+    
         // Desconto
         let valorFinal = (valor > 500 || cupom) ? valor *0.85 : valor;
 
-    // Estoque
-    let estoque = ["Placa de Vídeo", "Processador", "Memória Ram"];
-    lista.innerHTML = ""; // Limpa e lista Anterior
-
-    //forEach:percorre um arraye aolica uma ação apta cada elemento
-    estoque.forEach(item => {
-        let li = document.createElement("li");
-        li.innerText = `Item ${item} reservado.`;
-        lista.appendChild(li);//usando para adicionar um novo elemento ou texto
-    });
+   
 
     relatorio.style.display = "block";
     relatorio.innerHTML = `
@@ -45,11 +47,11 @@ function executarSistema(){
     Total Original: R$ ${valor.toFixed(2)} <br>
     <strong> Total com Desconto: R$ ${valorFinal.toFixed(2)} </strong>
     `;
-    }else{
+ }else{
         msg.innerText = "Venda bloqueada: Menor de 16 anos.";
         msg.style.color = "#ff4444";
         relatorio.style.display = "none";
         lista.innerHTML = "";
-    }
-}
+    };
 
+}

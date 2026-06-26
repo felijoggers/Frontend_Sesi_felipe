@@ -21,6 +21,9 @@
             placeholder="Pesquisar produto..."
         >
     </div>
+    <button id="ordenarAZ">
+        Ordenar A-Z
+    </button>
     <div class="cards">
     </div>
     
@@ -118,31 +121,15 @@ card.classList.add("card");
 
 card.onclick = function() {
 
-    if (produto.estoque <= 0) {
-        alert("Produto sem estoque!");
-        return;
-    }
+if (produto.estoque <= 0) {
+    alert("Produto sem estoque!");
+    return;
+}
 
-    produto.estoque--;
+localStorage.setItem("produtoSelecionado", produto.nome);
+localStorage.setItem("precoSelecionado", produto.preco);
 
-    console.log(produtos);
-
-    localStorage.setItem(
-        "produtos",
-        JSON.stringify(produtos)
-    );
-
-    localStorage.setItem(
-        "produtoSelecionado",
-        produto.nome
-    );
-
-    localStorage.setItem(
-        "precoSelecionado",
-        produto.preco
-    );
-
-    window.location.href = "index.html";
+window.location.href = "index.html";
 };
 
     card.innerHTML = `
@@ -166,6 +153,9 @@ card.onclick = function() {
         <button onclick="event.stopPropagation(); removerEstoque('${produto.nome}')">
         - Estoque
         </button>
+        <button onclick="event.stopPropagation(); editarProduto('${produto.nome}')">
+    Editar
+</button> 
     `;
 
     container.appendChild(card);
@@ -296,10 +286,61 @@ const produto = produtos[indice];
     });
 });
 </script>
+<script>
+function editarProduto(nome){
+
+let produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+
+const produto = produtos.find(p => p.nome === nome);
+
+if(!produto){
+    alert("Produto não encontrado!");
+    return;
+}
+
+const novoNome = prompt("Novo nome:", produto.nome);
+const novaCategoria = prompt("Nova categoria:", produto.categoria);
+const novoPreco = prompt("Novo preço:", produto.preco);
+const novoEstoque = prompt("Novo estoque:", produto.estoque);
+
+if(
+    novoNome === null ||
+    novaCategoria === null ||
+    novoPreco === null ||
+    novoEstoque === null
+){
+    return;
+}
+
+produto.nome = novoNome;
+produto.categoria = novaCategoria;
+produto.preco = Number(novoPreco.replace(",", "."));
+produto.estoque = Number(novoEstoque);
+
+localStorage.setItem(
+    "produtos",
+    JSON.stringify(produtos)
+);
+
+location.reload();
+}
+</script>
+<script>
+    document.getElementById("ordenarAZ").addEventListener("click", () => {
+
+produtos.sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+
+localStorage.setItem(
+    "produtos",
+    JSON.stringify(produtos)
+);
+
+document.querySelector(".cards").innerHTML = "";
+
+renderizarProdutos();
+});
+</script>
 
 
 </body>
 </html>
-
-
-
