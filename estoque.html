@@ -83,12 +83,12 @@ if (estoque[nome] !== undefined) {
 
     estoque[nome]++;
 
-    localStorage.setItem(
-        "estoque",
-        JSON.stringify(estoque)
-    );
+        localStorage.setItem(
+            "estoque",
+            JSON.stringify(estoque)
+        );
 
-} else {
+    } else {    
 
     let produtos = JSON.parse(localStorage.getItem("produtos")) || [];
 
